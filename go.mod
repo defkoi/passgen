@@ -2,7 +2,10 @@ module github.com/defkoi/passgen
 
 go 1.25.0
 
-require github.com/dop251/goja v0.0.0-20260607120635-348e6bea910d
+require (
+	github.com/dop251/goja v0.0.0-20260607120635-348e6bea910d
+	github.com/webview/webview_go v0.0.0-20240831120633-6173450d4dd6
+)
 
 require (
 	github.com/dlclark/regexp2/v2 v2.2.1 // indirect

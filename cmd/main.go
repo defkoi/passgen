@@ -1,22 +1,26 @@
 package main
 
 import (
+	_ "embed"
 	"flag"
 	"fmt"
 	"log"
 	"os"
 
 	"github.com/defkoi/passgen"
+	webwiev "github.com/webview/webview_go"
 )
 
 var (
 	length int
 	script string
+	view   bool
 )
 
 func init() {
 	flag.IntVar(&length, "l", 8, "password length")
-	flag.StringVar(&script, "s", "", "custom script")
+	flag.StringVar(&script, "s", "", "external script")
+	flag.BoolVar(&view, "w", false, "enable webview")
 	flag.Parse()
 }
 
@@ -31,9 +35,32 @@ func init() {
 }
 
 func main() {
+	if view {
+		webView()
+		return
+	}
+
 	if v, err := passgen.GeneratePassword(length); err != nil {
 		fmt.Println(err)
 	} else {
 		fmt.Println(v)
 	}
+}
+
+//go:embed webview/index.html
+var html string
+
+func webView() {
+	w := webwiev.New(false)
+	defer w.Destroy()
+
+	w.SetSize(400, 400, webwiev.HintFixed)
+	w.SetTitle("password generator")
+	w.SetHtml(html)
+
+	w.Bind("generatePassword", func(length int) (string, error) {
+		return passgen.GeneratePassword(int(length))
+	})
+
+	w.Run()
 }

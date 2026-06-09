@@ -23,8 +23,11 @@ func init() {
 func GeneratePassword(length int) (string, error) {
 	rt.Set("LENGTH", length)
 
-	v, err := rt.RunScript(Name, source)
-	return v.String(), err
+	if v, err := rt.RunScript(Name, source); err != nil {
+		return "", err
+	} else {
+		return v.String(), nil
+	}
 }
 
 func SetScript(script string) {
