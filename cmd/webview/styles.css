@@ -1,0 +1,50 @@
+/* {{ define "styles" }} */
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  height: 100vh;
+  width: 100vw;
+
+  background-color: rgb(184, 184, 184);
+  color: black;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+
+  font-family: monospace;
+}
+
+main {
+  padding: 1rem;
+  width: 60%;
+
+  background-color: white;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+
+  border: 2px solid black;
+  border-radius: 1rem;
+}
+
+#button {
+  padding: 2px 4px;
+}
+
+#input {
+  text-align: center;
+}
+
+#password {
+  white-space: nowrap;
+}
+
+/* {{ end }} */

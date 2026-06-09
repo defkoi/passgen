@@ -1,9 +1,12 @@
 package main
 
 import (
+	"bytes"
+	"embed"
 	_ "embed"
 	"flag"
 	"fmt"
+	"html/template"
 	"log"
 	"os"
 
@@ -47,20 +50,35 @@ func main() {
 	}
 }
 
-//go:embed webview/index.html
-var html string
-
 func webView() {
 	w := webwiev.New(false)
 	defer w.Destroy()
 
 	w.SetSize(400, 400, webwiev.HintFixed)
 	w.SetTitle("password generator")
-	w.SetHtml(html)
+	w.SetHtml(parseWebViewHTML())
 
 	w.Bind("generatePassword", func(length int) (string, error) {
 		return passgen.GeneratePassword(int(length))
 	})
 
 	w.Run()
+}
+
+//go:embed webview
+var webViewFiles embed.FS
+
+func parseWebViewHTML() string {
+	t, err := template.ParseFS(webViewFiles, "**/*.html", "**/*.css", "**/*.js")
+	if err != nil {
+		panic(err)
+	}
+
+	var buf = bytes.NewBuffer([]byte{})
+	data := map[string]any{"length": length}
+	if err := t.Lookup("index.html").Execute(buf, data); err != nil {
+		panic(err)
+	}
+
+	return buf.String()
 }
