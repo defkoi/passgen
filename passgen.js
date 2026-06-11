@@ -24,12 +24,6 @@ function shuffle(string) {
 }
 
 function passgen(length = 8) {
-  const LOWERS = "abcdefghijklmnopqrstuvwxyz";
-  const UPPERS = LOWERS.toUpperCase();
-  const DIGITS = "0123456789";
-  const OTHERS = "`~!@#$%^&*()-_=+[{]}\\|;:'\",<.>/?";
-  const CHARSET = LOWERS + UPPERS + DIGITS + OTHERS;
-
   if (length < 4) throw new Error("length < 4");
 
   const randomChar = randomSource();
@@ -39,6 +33,8 @@ function passgen(length = 8) {
   password += randomChar(UPPERS);
   password += randomChar(DIGITS);
   password += randomChar(OTHERS);
+
+  const CHARSET = LOWERS + UPPERS + DIGITS + OTHERS;
 
   for (let i = 4; i < length; i++) password += randomChar(CHARSET);
 

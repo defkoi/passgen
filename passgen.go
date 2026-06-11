@@ -10,14 +10,29 @@ import (
 
 const Name = "passgen"
 
+type CharSet struct {
+	Lowers string
+	Uppers string
+	Digits string
+	Others string
+}
+
 //go:embed passgen.js
 var source string
 
 var rt *goja.Runtime
 
+var defaultCharSet = CharSet{
+	Lowers: "abcdefghijklmnopqrstuvwxyz",
+	Uppers: "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+	Digits: "0123456789",
+	Others: "`~!@#$%^&*()-_=+[{]}\\|;:'\",<.>/?",
+}
+
 func init() {
 	rt = goja.New()
 	rt.SetRandSource(randFloat)
+	SetCharSet(defaultCharSet)
 }
 
 func GeneratePassword(length int) (string, error) {
@@ -32,6 +47,13 @@ func GeneratePassword(length int) (string, error) {
 
 func SetScript(script string) {
 	source = script
+}
+
+func SetCharSet(cs CharSet) {
+	rt.Set("LOWERS", cs.Lowers)
+	rt.Set("UPPERS", cs.Uppers)
+	rt.Set("DIGITS", cs.Digits)
+	rt.Set("OTHERS", cs.Others)
 }
 
 func randFloat() float64 {
