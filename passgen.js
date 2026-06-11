@@ -1,22 +1,32 @@
+let LOWERS, UPPERS, DIGITS, OTHERS;
+if (typeof charset !== "undefined") {
+  LOWERS = charset.lowers;
+  UPPERS = charset.uppers;
+  DIGITS = charset.digits;
+  OTHERS = charset.others;
+} else {
+  LOWERS = "abcdefghijklmnopqrstuvwxyz";
+  UPPERS = LOWERS.toUpperCase();
+  DIGITS = "0123456789";
+  OTHERS = "`~!@#$%^&*()-_=+[{]}\\|;:'\",<.>/?";
+}
+
+function randUint() {
+  return Math.floor(Math.random() * 0xff);
+}
+
 function randomSource() {
-  if (globalThis.crypto) {
-    const CAPACITY = 0x10;
+  const fill =
+    typeof crypto !== "undefined" && crypto.getRandomValues
+      ? (array) => crypto.getRandomValues(array)
+      : (array) => array.forEach((_, i, a) => (a[i] = randUint()));
 
-    const refresh = () => {
-      crypto.getRandomValues(array);
-      i = 0;
-    };
+  const CAPACITY = 0x10;
+  const array = new Uint8Array(CAPACITY);
+  let i = CAPACITY;
+  const next = () => (i >= CAPACITY ? (fill(array), (i = 0)) : i++);
 
-    let array = new Uint8Array(CAPACITY),
-      i = CAPACITY;
-
-    return (source) => {
-      if (i >= CAPACITY) refresh();
-      return source[array[i++] % source.length];
-    };
-  } else {
-    return (source) => source[Math.floor(Math.random() * source.length)];
-  }
+  return (source) => source[array[next()] % source.length];
 }
 
 function shuffle(string) {
@@ -41,4 +51,8 @@ function passgen(length = 8) {
   return shuffle(password);
 }
 
-passgen(LENGTH);
+const result = passgen(globalThis.LENGTH);
+
+if ("console" in globalThis && console.log) console.log(result);
+
+result;

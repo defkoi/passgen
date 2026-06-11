@@ -50,10 +50,13 @@ func SetScript(script string) {
 }
 
 func SetCharSet(cs CharSet) {
-	rt.Set("LOWERS", cs.Lowers)
-	rt.Set("UPPERS", cs.Uppers)
-	rt.Set("DIGITS", cs.Digits)
-	rt.Set("OTHERS", cs.Others)
+	obj := rt.NewObject()
+	rt.Set("charset", obj)
+
+	obj.Set("lowers", cs.Lowers)
+	obj.Set("uppers", cs.Uppers)
+	obj.Set("digits", cs.Digits)
+	obj.Set("others", cs.Others)
 }
 
 func randFloat() float64 {
