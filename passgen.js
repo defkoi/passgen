@@ -47,7 +47,7 @@ function passgen(length = 8) {
   if (DIGITS) password += randomChar(DIGITS);
   if (OTHERS) password += randomChar(OTHERS);
 
-  for (let i = 4; i < length; i++) password += randomChar(CHARSET);
+  while (password.length < length) password += randomChar(CHARSET);
 
   return shuffle(password);
 }
