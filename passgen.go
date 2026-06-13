@@ -81,7 +81,7 @@ func CharSetFromModifier(modifier string) (cs CharSet, err error) {
 		case 'o':
 			cs.Others = dcs.Others
 		default:
-			err = fmt.Errorf("unknown charset modifier '%c'\n", ch)
+			err = fmt.Errorf("unknown charset modifier '%c'", ch)
 		}
 	}
 
