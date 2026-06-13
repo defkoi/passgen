@@ -22,17 +22,10 @@ var source string
 
 var rt *goja.Runtime
 
-var defaultCharSet = CharSet{
-	Lowers: "abcdefghijklmnopqrstuvwxyz",
-	Uppers: "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
-	Digits: "0123456789",
-	Others: "`~!@#$%^&*()-_=+[{]}\\|;:'\",<.>/?",
-}
-
 func init() {
 	rt = goja.New()
 	rt.SetRandSource(randFloat)
-	SetCharSet(defaultCharSet)
+	SetCharSet(DefaultCharSet())
 }
 
 func GeneratePassword(length int) (string, error) {
@@ -57,6 +50,15 @@ func SetCharSet(cs CharSet) {
 	obj.Set("uppers", cs.Uppers)
 	obj.Set("digits", cs.Digits)
 	obj.Set("others", cs.Others)
+}
+
+func DefaultCharSet() CharSet {
+	return CharSet{
+		Lowers: "abcdefghijklmnopqrstuvwxyz",
+		Uppers: "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+		Digits: "0123456789",
+		Others: "`~!@#$%^&*()-_=+[{]}\\|;:'\",<.>/?",
+	}
 }
 
 func randFloat() float64 {

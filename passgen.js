@@ -1,4 +1,4 @@
-let LOWERS, UPPERS, DIGITS, OTHERS;
+var LOWERS, UPPERS, DIGITS, OTHERS;
 if (typeof charset !== "undefined") {
   LOWERS = charset.lowers;
   UPPERS = charset.uppers;
@@ -34,24 +34,25 @@ function shuffle(string) {
 }
 
 function passgen(length = 8) {
+  const CHARSET = LOWERS + UPPERS + DIGITS + OTHERS;
+
   if (length < 4) throw new Error("length < 4");
+  if (!CHARSET) throw new Error("empty charset");
 
   const randomChar = randomSource();
 
   let password = "";
-  password += randomChar(LOWERS);
-  password += randomChar(UPPERS);
-  password += randomChar(DIGITS);
-  password += randomChar(OTHERS);
-
-  const CHARSET = LOWERS + UPPERS + DIGITS + OTHERS;
+  if (LOWERS) password += randomChar(LOWERS);
+  if (UPPERS) password += randomChar(UPPERS);
+  if (DIGITS) password += randomChar(DIGITS);
+  if (OTHERS) password += randomChar(OTHERS);
 
   for (let i = 4; i < length; i++) password += randomChar(CHARSET);
 
   return shuffle(password);
 }
 
-const result = passgen(globalThis.LENGTH);
+var result = passgen(globalThis.LENGTH);
 
 if ("console" in globalThis && console.log) console.log(result);
 
