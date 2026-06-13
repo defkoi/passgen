@@ -15,15 +15,19 @@ import (
 )
 
 var (
-	length int
-	script string
-	view   bool
+	length   int
+	script   string
+	view     bool
+	modifier string
 )
 
 func init() {
 	flag.IntVar(&length, "l", 8, "password length")
 	flag.StringVar(&script, "s", "", "external script")
 	flag.BoolVar(&view, "w", false, "enable webview")
+	flag.StringVar(&modifier, "m", "ludo",
+		"charset modifier (l - lowers, u - uppers, d - digits, o - others)",
+	)
 	flag.Parse()
 }
 
@@ -34,6 +38,16 @@ func init() {
 			log.Fatal(err)
 		}
 		passgen.SetScript(string(source))
+	}
+}
+
+func init() {
+	if modifier != "ludo" {
+		if cs, err := passgen.CharSetFromModifier(modifier); err != nil {
+			fmt.Println(err)
+		} else {
+			passgen.SetCharSet(cs)
+		}
 	}
 }
 

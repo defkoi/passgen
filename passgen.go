@@ -4,6 +4,7 @@ import (
 	"crypto/rand"
 	_ "embed"
 	"encoding/binary"
+	"fmt"
 
 	"github.com/dop251/goja"
 )
@@ -59,6 +60,32 @@ func DefaultCharSet() CharSet {
 		Digits: "0123456789",
 		Others: "`~!@#$%^&*()-_=+[{]}\\|;:'\",<.>/?",
 	}
+}
+
+func CharSetFromModifier(modifier string) (cs CharSet, err error) {
+	dcs := DefaultCharSet()
+
+	for _, ch := range modifier {
+		lch := ch
+		if 'A' <= ch && ch <= 'Z' {
+			lch -= 'A' - 'a'
+		}
+
+		switch lch {
+		case 'l':
+			cs.Lowers = dcs.Lowers
+		case 'u':
+			cs.Uppers = dcs.Uppers
+		case 'd':
+			cs.Digits = dcs.Digits
+		case 'o':
+			cs.Others = dcs.Others
+		default:
+			err = fmt.Errorf("unknown charset modifier '%c'\n", ch)
+		}
+	}
+
+	return
 }
 
 func randFloat() float64 {
